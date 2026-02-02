@@ -51,10 +51,10 @@ export default function Onboarding() {
       // Mark onboarding as completed
       await AsyncStorage.setItem("hasCompletedOnboarding", "true");
       // Navigate to login
-      router.replace("/(auth)/login");
+      router.replace("/(auth)/signup");
     } catch (error) {
       // If storage fails, still navigate to login
-      router.replace("/(auth)/login");
+      router.replace("/(auth)/signup");
     }
   };
 

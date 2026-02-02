@@ -24,7 +24,7 @@ export default function HomeScreen() {
     try {
       // Get the auth token from storage
       const token = await AsyncStorage.getItem("authToken");
-      console.log("AUTH TOKEN:", token);
+
 
       if (!token) {
         router.replace("/(auth)/login");

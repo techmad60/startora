@@ -1,5 +1,6 @@
 import { Text } from "@/components/Text";
 import { TextInput as CustomTextInput } from "@/components/TextInput";
+import { useBiometrics } from "@/hooks/useBiometrics";
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -10,6 +11,7 @@ import Toast from "react-native-toast-message";
 
 export default function LoginScreen() {
   const router = useRouter();
+  const { isCompatible, isEnrolled, authenticate } = useBiometrics();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -82,6 +84,37 @@ export default function LoginScreen() {
     }
   };
 
+  const handleBiometricAuth = async () => {
+    const success = await authenticate();
+    if (success) {
+      // Check if we have a valid token stored
+      const token = await AsyncStorage.getItem("authToken");
+      
+      if (token) {
+        Toast.show({
+          type: "success",
+          text1: "Login Successful",
+          text2: "Welcome back!",
+        });
+        setTimeout(() => {
+          router.replace("/(tabs)");
+        }, 1000);
+      } else {
+        Toast.show({
+          type: "error",
+          text1: "Session Expired",
+          text2: "Please log in with password to re-enable biometrics.",
+        });
+      }
+    } else {
+      Toast.show({
+        type: "error",
+        text1: "Authentication Failed",
+        text2: "Please try again or use your password.",
+      });
+    }
+  };
+
   return (
     <>
       <View className="flex-1 bg-black relative" />
@@ -137,6 +170,18 @@ export default function LoginScreen() {
               Login
             </Text>
           </TouchableOpacity>
+
+          {isCompatible && isEnrolled && (
+            <TouchableOpacity
+              className="mt-9 flex-col items-center justify-center space-x-2"
+              onPress={handleBiometricAuth}
+            >
+              <Ionicons name="finger-print" size={32} color={"#76FAA7"} />
+              <Text weight="Medium" className="text-black ml-2">
+                Use fingerprint to login
+              </Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity onPress={() => router.push("/(auth)/signup")}>
             <Text className="text-gray-500 text-xs mt-32 text-center">
               Don&apos;t have an Account?
