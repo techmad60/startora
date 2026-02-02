@@ -1,0 +1,14 @@
+Folder PATH listing
+Volume serial number is 9E13-DC60
+C:\USERS\HP 250 G7\DOCUMENTS\ANDROID-PROJECTS\STARTORA\APP
+|   home.tsx
+|   index.tsx
+|   _layout.tsx
+|   
++---(auth)
+|       signup.tsx
+|       
+\---(startup)
+        onboarding.tsx
+        splash.tsx
+        
